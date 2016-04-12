@@ -21,6 +21,11 @@ module test_addNumbers =
     let ``addNumbers 1 0 = 1``() =
         addNumbers 1 0
         |> should equal 1
+
+    [<Test>]
+    let ``addNumbers 1 -1 = 0``() =
+        addNumbers 1 -1
+        |> should equal 0
     
 module test_replicate =    
     [<Test>]

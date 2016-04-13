@@ -4,6 +4,7 @@ open impl
 
 open NUnit.Framework
 open FsUnit
+open FsCheck
 
 module test_twice =
     [<Test>]
@@ -39,9 +40,9 @@ module test_replicate =
         |> should equal [1]
     
     [<Test>]
-    let ``replicate 1 2 returns [1;1]``() =
-        replicate 1 2
-        |> should equal [1;1]
+    let ``replicate 0 2 returns [0;0]``() =
+        replicate 0 2
+        |> should equal [0;0]
 
 module test_fibonacci =
     [<Test>]
@@ -50,12 +51,24 @@ module test_fibonacci =
         |> should equal []
 
     [<Test>]
-    let ``fibonacci 1 returns [1]``() =
+    let ``fibonacci 1 returns [0]``() =
         fibonacci 1
-        |> should equal [1]
+        |> should equal [0]
 
     [<Test>]
-    let ``fibonacci 5 returns [1;2;3;5;8]``() =
+    let ``fibonacci 5 returns [0;1;1;2;3]``() =
         fibonacci 5
-        |> should equal [1;2;3;5;8]
+        |> should equal [0;1;1;2;3]
+
+    [<Test>]
+    let ``Given any 3 consecutive fibonacci numbers expect the third is the sum of the previous ones`` () =
+        fun(n) ->
+            let [a;b;c] =
+                fibonacci (n + 3)
+                |> Seq.skip n
+                |> Seq.take 3
+                |> List.ofSeq
+            a + b = c
+        |> Check.VerboseThrowOnFailure
+        
 

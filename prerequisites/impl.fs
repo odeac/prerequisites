@@ -10,4 +10,5 @@ let addNumbers (a : int) (b : int) : int = failwith "not implemented"
 let replicate (x : int) (n : int) : int list = failwith "not implemented"
 
 /// Returns a list containing the first n Fibonacci numbers
-let fibonacci (n : int) : int list = failwith "not impleSmented"
+/// https://en.wikipedia.org/wiki/Fibonacci_number
+let fibonacci (n : int) : int list = failwith "not implemented"

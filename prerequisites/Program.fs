@@ -11,4 +11,7 @@ let main argv =
     fibonacci 10
     |> printfn "fibonacci 10 = %A"
 
+    System.Console.ReadKey () 
+    |> ignore
+
     0

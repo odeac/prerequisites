@@ -5,6 +5,7 @@ open impl
 open NUnit.Framework
 open FsUnit
 open FsCheck
+open FsCheck.NUnit
 
 module test_twice =
     [<Test>]
@@ -17,11 +18,9 @@ module test_twice =
         twice 1
         |> should equal 2
 
-    [<Test>]
-    let ``twice n equals n + n``() =
-        fun (n) ->
-            twice n = n + n
-        |> Check.VerboseThrowOnFailure
+    [<Property>]
+    let ``twice n equals n + n``(n : int) =
+        twice n = n + n
 
 module test_addNumbers =
     [<Test>]
@@ -34,26 +33,20 @@ module test_addNumbers =
         addNumbers 1 -1
         |> should equal 0
         
-    [<Test>]
-    let ``Zero is neutral element for addNumbers``() =
-        fun (a) ->
-            addNumbers 0 a
-            |> should equal a
-        |> Check.VerboseThrowOnFailure
+    [<Property>]
+    let ``Zero is neutral element for addNumbers``(a : int) =
+        addNumbers 0 a
+        |> should equal a
         
-    [<Test>]
-    let ``addNumbers is commutative``() =
-        fun (a,b) ->
-            addNumbers a b
-            |> should equal (addNumbers b a)
-        |> Check.VerboseThrowOnFailure
+    [<Property>]
+    let ``addNumbers is commutative``(a:int, b:int) =
+        addNumbers a b
+        |> should equal (addNumbers b a)
 
-    [<Test>]
-    let ``addNumbers is associative``() =
-        fun (a,b,c) ->
-            addNumbers a (addNumbers b c)
-            |> should equal (addNumbers (addNumbers a b) c)
-        |> Check.VerboseThrowOnFailure
+    [<Property>]
+    let ``addNumbers is associative``(a:int,b:int,c:int) =
+        addNumbers a (addNumbers b c)
+        |> should equal (addNumbers (addNumbers a b) c)
     
 module test_replicate =    
     [<Test>]
@@ -71,20 +64,16 @@ module test_replicate =
         replicate 0 2
         |> should equal [0;0]
 
-    [<Test>]
-    let ``Sum of the elements equals product of the parameters``() =
-        fun (a, n) ->
-            n > 0 ==> lazy ( replicate a n
-                             |> Seq.sum
-                             |> should equal (a * n) )
-        |> Check.VerboseThrowOnFailure
+    [<Property>]
+    let ``Sum of the elements equals product of the parameters``(a:int, n:int) =
+        n > 0 ==> lazy ( replicate a n
+                            |> Seq.sum
+                            |> should equal (a * n) )
         
-    [<Test>]
-    let ``Replicate 0 times gives an empty list``() =
-        fun (a) ->
-            replicate a 0
-            |> should equal []
-        |> Check.VerboseThrowOnFailure
+    [<Property>]
+    let ``Replicate 0 times gives an empty list``(a:int) =
+        replicate a 0
+        |> should equal []
 
 module test_fibonacci =
     [<Test>]
@@ -102,16 +91,14 @@ module test_fibonacci =
         fibonacci 5
         |> should equal [0;1;1;2;3]
 
-    [<Test>]
-    let ``Given any 3 consecutive fibonacci numbers expect the third is the sum of the previous ones`` () =
-        fun(n) ->
-            n >= 0 ==> lazy ( let [a;b;c] =
-                                    fibonacci (n + 3)
-                                    |> Seq.skip n
-                                    |> Seq.take 3
-                                    |> List.ofSeq
-                              a + b 
-                              |> should equal c )
-        |> Check.VerboseThrowOnFailure
+    [<Property>]
+    let ``Given any 3 consecutive fibonacci numbers expect the third is the sum of the previous ones`` (n:int) =
+        n >= 0 ==> lazy ( let [a;b;c] =
+                                fibonacci (n + 3)
+                                |> Seq.skip n
+                                |> Seq.take 3
+                                |> List.ofSeq
+                          a + b 
+                          |> should equal c )
         
 
